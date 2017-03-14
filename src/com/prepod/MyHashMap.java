@@ -70,8 +70,7 @@ public class MyHashMap<K, V> {
     }
 
     private boolean checkEquals(int index, K key) {
-        if (table[index] == null) return false;
-        return key == table[index].getKey() || key != null && key.equals(table[index].getKey());
+        return table[index] != null && (key == table[index].getKey() || key != null && key.equals(table[index].getKey()));
     }
 
     private int calcIndex(K key) {
