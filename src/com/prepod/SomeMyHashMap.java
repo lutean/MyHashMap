@@ -6,8 +6,8 @@ public class SomeMyHashMap extends MyHashMap<Integer, Long> {
         super();
     }
 
-    public SomeMyHashMap(int capacity) {
-        super(capacity);
+    public SomeMyHashMap(int capacity, float loadFactor) {
+        super(capacity, loadFactor);
     }
 
 }

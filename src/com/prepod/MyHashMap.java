@@ -4,13 +4,19 @@ public class MyHashMap<K, V> {
 
     private Entry<K, V>[] table;
     private int size;
+    private int threshold;
+    private float loadFactor;
+    private int capacity;
 
-    MyHashMap() {
-        this(16);
+    public MyHashMap() {
+        this(16, 0.75f);
     }
 
-    MyHashMap(int capacity) {
+    public MyHashMap(int capacity, float loadFactor) {
+        this.capacity = capacity;
+        this.loadFactor = loadFactor;
         table = new Entry[capacity];
+        threshold =  (int)( capacity * loadFactor);
     }
 
     public int size() {
@@ -19,12 +25,13 @@ public class MyHashMap<K, V> {
 
     public V put(K key, V value) {
         int index = calcIndex(key);
-        if (checkEquals(index, key)) {
-            addEntry(key, value, index);
+        if (checkEquals(index, key, table)) {
+            putEntry(key, value, index);
         } else {
-            index = findEmpty(index, key);
+            if (isOverLoad()) resize(capacity * 2);
+            index = findEmpty(index, key, table);
             if (index < 0) return null;
-            addEntry(key, value, index);
+            putEntry(key, value, index);
             size++;
         }
         return value;
@@ -38,8 +45,8 @@ public class MyHashMap<K, V> {
         int i = index;
         do {
             if (table[i] == null) return null;
-            if (checkEquals(i, key) && !table[i].isDeleted()) return table[i].getValue();
-            i = (i + 1) % table.length;
+            if (checkEquals(i, key, table) && !table[i].isDeleted()) return table[i].getValue();
+            i = (i + 1) % capacity;
         } while (i != index);
         return null;
     }
@@ -49,37 +56,67 @@ public class MyHashMap<K, V> {
         int i = index;
         do {
             if (table[i] == null) return false;
-            if (checkEquals(i, key)) {
+            if (checkEquals(i, key, table)) {
                 if (table[i].isDeleted()) return false;
                 table[i].setDeleted(true);
                 size--;
                 return true;
             }
-            i = (i + 1) % table.length;
+            i = (i + 1) % capacity;
         } while (i != index);
         return false;
     }
 
-    private int findEmpty(int index, K key) {
+    private int findEmpty(int index, K key, Entry[] table) {
         int i = index;
         do {
-            if (table[i] == null || table[i].isDeleted() || checkEquals(i, key)) return i;
-            i = (i + 1) % table.length;
+            if (table[i] == null || table[i].isDeleted() || checkEquals(i, key, table)) return i;
+            i = (i + 1) % capacity;
         } while (i != index);
         return -1;
     }
 
-    private boolean checkEquals(int index, K key) {
+    private boolean checkEquals(int index, K key, Entry[] table) {
         return table[index] != null && (key == table[index].getKey() || key != null && key.equals(table[index].getKey()));
     }
 
     private int calcIndex(K key) {
         if (key == null) return 0;
-        return Math.abs(key.hashCode() % table.length);
+        return Math.abs(key.hashCode() % capacity);
     }
 
-    private void addEntry(K key, V value, int index) {
+    private void putEntry(K key, V value, int index) {
         table[index] = new Entry<>(key, value);
+    }
+
+    private void resize(int newCapacity) {
+        this.capacity = newCapacity;
+        Entry[] newTable = new Entry[newCapacity];
+
+        transfer(newTable);
+
+        table = newTable;
+        threshold = (int)(newCapacity * loadFactor);
+    }
+
+    private void transfer(Entry[] newTable){
+        for (Entry<K, V> entry : table) {
+            if (entry == null) continue;
+            int index = calcIndex(entry.getKey());
+            if (checkEquals(index, entry.getKey(), newTable)) {
+                newTable[index] = entry;
+            } else {
+                index = findEmpty(index, entry.getKey(), newTable);
+                //if (index < 0) return null;
+                newTable[index] = entry;
+            }
+        }
+    }
+
+
+    private boolean isOverLoad(){
+        if (size >= threshold) return true;
+        return false;
     }
 
 

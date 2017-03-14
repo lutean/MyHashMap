@@ -15,18 +15,18 @@ public class SomeMyHashMapTest {
 
     @Test
     public void testPut() throws Exception {
-        SomeMyHashMap map = new SomeMyHashMap(10);
-        Assert.assertEquals(Long.valueOf(1L), Long.valueOf(map.put(1, 1L)));
-        Assert.assertEquals(Long.valueOf(0L), Long.valueOf(map.put(0, 0L)));
-        Assert.assertEquals(Long.valueOf(11L), Long.valueOf(map.put(11, 11L)));
-        Assert.assertEquals(Long.valueOf(12L), Long.valueOf(map.put(12, 12L)));
-        Assert.assertEquals(Long.valueOf(101L), Long.valueOf(map.put(1, 101L)));
-        Assert.assertEquals(Long.valueOf(0L), Long.valueOf(map.put(null, 0L)));
+        SomeMyHashMap map = new SomeMyHashMap();
+        Assert.assertEquals(Long.valueOf(1L), map.put(1, 1L));
+        Assert.assertEquals(Long.valueOf(0L), map.put(0, 0L));
+        Assert.assertEquals(Long.valueOf(11L), map.put(11, 11L));
+        Assert.assertEquals(Long.valueOf(12L), map.put(12, 12L));
+        Assert.assertEquals(Long.valueOf(101L), map.put(1, 101L));
+        Assert.assertEquals(Long.valueOf(0L), map.put(null, 0L));
     }
 
     @Test
     public void testGet() throws Exception {
-        SomeMyHashMap map = new SomeMyHashMap(10);
+        SomeMyHashMap map = new SomeMyHashMap();
         map.put(1, 10L);
         map.put(null, 1L);
         map.put(2, null);
@@ -47,7 +47,7 @@ public class SomeMyHashMapTest {
 
     @Test
     public void testRemove() throws Exception {
-        SomeMyHashMap map = new SomeMyHashMap(8);
+        SomeMyHashMap map = new SomeMyHashMap();
 
         map.put(1, 10L);
         map.put(3, 30L);
@@ -67,5 +67,32 @@ public class SomeMyHashMapTest {
         Assert.assertEquals(false, map.remove(3));
         Assert.assertEquals(1, map.size());
     }
+
+    @Test
+    public void testOverload() throws Exception {
+
+        SomeMyHashMap map = new SomeMyHashMap(5, 0.75f);
+
+        map.put(0, 0L);
+        map.put(6, 6L);
+        map.put(9, 9L);
+        map.put(11,11L);
+        map.put(1, 10L);
+        map.put(null, 1L);
+        map.put(2, null);
+        map.put(1, 1L);
+        map.put(11,11L);
+        map.put(10, 10L);
+        map.put(null, 11L);
+        map.put(111, 111L);
+        map.put(null, 12L);
+        map.put(10, 1L);
+
+        Assert.assertEquals(Long.valueOf(11L), map.get(11));
+        Assert.assertEquals(Long.valueOf(1L), map.get(10));
+
+
+    }
+
 
 }
