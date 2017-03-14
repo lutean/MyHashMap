@@ -1,7 +1,5 @@
 package com.prepod;
 
-import java.util.HashMap;
-
 public class MyHashMap<K, V> {
 
     private Entry[] table;
@@ -13,7 +11,6 @@ public class MyHashMap<K, V> {
 
     public MyHashMap(int capacity) {
         table = new Entry[capacity];
-        HashMap<String, String> map;
     }
 
     public int size() {
@@ -21,30 +18,26 @@ public class MyHashMap<K, V> {
     }
 
     public V put(K key, V value) {
-        if (null == key) putForNullKey(value);
-        int index = calcIndex(key);
+        int index = 0;
+        if (null != key) index = calcIndex(key);
         if (checkEquals(index, key)) {
-            table[index] = newEntry(key, value);
+            addEntry(key, value, index);
         } else {
-            index = findEmpty(index);
+            index = findEmpty(index, key);
             if (index < 0) return null;
-            table[index] = newEntry(key, value);
+            addEntry(key, value, index);
             size++;
         }
         return value;
     }
 
-    private int findEmpty(int index){
+    private int findEmpty(int index, K key){
         int i = index;
         do{
-            if (table[i].isDeleted() || table[i] == null) return index;
+            if (table[i] == null || table[i].isDeleted() || checkEquals(i, key)) return i;
             i = (i + 1) % table.length;
         }while (i != index);
         return -1;
-    }
-
-    private Entry<K, V> newEntry(K key, V value) {
-        return new Entry<>(key, value);
     }
 
     private boolean checkEquals(int index, K key) {
@@ -56,12 +49,8 @@ public class MyHashMap<K, V> {
         return Math.abs(key.hashCode() % table.length);
     }
 
-    private void putForNullKey(V value) {
-
-    }
-
-    private void addEntry(K key, V value, int hash, int index) {
-
+    private void addEntry(K key, V value, int index) {
+        table[index] = new Entry<>(key, value);
     }
 
 
