@@ -2,7 +2,7 @@ package com.prepod;
 
 public class MyHashMap<K, V> {
 
-    private Entry[] table;
+    private Entry<K, V>[] table;
     private int size;
 
     public MyHashMap() {
@@ -18,8 +18,7 @@ public class MyHashMap<K, V> {
     }
 
     public V put(K key, V value) {
-        int index = 0;
-        if (null != key) index = calcIndex(key);
+        int index = calcIndex(key);
         if (checkEquals(index, key)) {
             addEntry(key, value, index);
         } else {
@@ -29,6 +28,20 @@ public class MyHashMap<K, V> {
             size++;
         }
         return value;
+    }
+
+    public V get(K key){
+        return find(calcIndex(key), key);
+    }
+
+    private V find(int index, K key){
+        int i = index;
+        do{
+            if (table[i] == null) return null;
+            if (checkEquals(i, key) && !table[i].isDeleted()) return table[i].getValue();
+            i = (i + 1) % table.length;
+        }while (i != index);
+        return null;
     }
 
     private int findEmpty(int index, K key){
@@ -46,6 +59,7 @@ public class MyHashMap<K, V> {
     }
 
     private int calcIndex(K key) {
+        if (key == null) return 0;
         return Math.abs(key.hashCode() % table.length);
     }
 
