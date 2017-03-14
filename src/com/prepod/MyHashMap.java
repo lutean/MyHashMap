@@ -92,9 +92,7 @@ public class MyHashMap<K, V> {
     private void resize(int newCapacity) {
         this.capacity = newCapacity;
         Entry[] newTable = new Entry[newCapacity];
-
         transfer(newTable);
-
         table = newTable;
         threshold = (int)(newCapacity * loadFactor);
     }
@@ -107,12 +105,10 @@ public class MyHashMap<K, V> {
                 newTable[index] = entry;
             } else {
                 index = findEmpty(index, entry.getKey(), newTable);
-                //if (index < 0) return null;
                 newTable[index] = entry;
             }
         }
     }
-
 
     private boolean isOverLoad(){
         if (size >= threshold) return true;

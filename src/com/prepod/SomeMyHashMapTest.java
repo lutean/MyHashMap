@@ -90,7 +90,7 @@ public class SomeMyHashMapTest {
 
         Assert.assertEquals(Long.valueOf(11L), map.get(11));
         Assert.assertEquals(Long.valueOf(1L), map.get(10));
-
+        Assert.assertEquals(Long.valueOf(12L), map.get(null));
 
     }
 
