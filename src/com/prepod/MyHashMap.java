@@ -5,11 +5,11 @@ public class MyHashMap<K, V> {
     private Entry<K, V>[] table;
     private int size;
 
-    public MyHashMap() {
+    MyHashMap() {
         this(16);
     }
 
-    public MyHashMap(int capacity) {
+    MyHashMap(int capacity) {
         table = new Entry[capacity];
     }
 
@@ -84,38 +84,38 @@ public class MyHashMap<K, V> {
     }
 
 
-    public static class Entry<K, V> {
+    private static class Entry<K, V> {
 
         private K key;
         private V value;
         private boolean deleted;
 
-        public Entry(K key, V value) {
+        private Entry(K key, V value) {
             this.key = key;
             this.value = value;
         }
 
-        public K getKey() {
+        private K getKey() {
             return key;
         }
 
-        public void setKey(K key) {
+        private void setKey(K key) {
             this.key = key;
         }
 
-        public V getValue() {
+        private V getValue() {
             return value;
         }
 
-        public void setValue(V value) {
+        private void setValue(V value) {
             this.value = value;
         }
 
-        public boolean isDeleted() {
+        private boolean isDeleted() {
             return deleted;
         }
 
-        public void setDeleted(boolean deleted) {
+        private void setDeleted(boolean deleted) {
             this.deleted = deleted;
         }
     }
