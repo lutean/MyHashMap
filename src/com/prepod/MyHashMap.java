@@ -30,26 +30,42 @@ public class MyHashMap<K, V> {
         return value;
     }
 
-    public V get(K key){
+    public V get(K key) {
         return find(calcIndex(key), key);
     }
 
-    private V find(int index, K key){
+    private V find(int index, K key) {
         int i = index;
-        do{
+        do {
             if (table[i] == null) return null;
             if (checkEquals(i, key) && !table[i].isDeleted()) return table[i].getValue();
             i = (i + 1) % table.length;
-        }while (i != index);
+        } while (i != index);
         return null;
     }
 
-    private int findEmpty(int index, K key){
+    public boolean remove(K key) {
+        int index = calcIndex(key);
         int i = index;
-        do{
+        do {
+            if (table[i] == null) return false;
+            if (checkEquals(i, key)) {
+                if (table[i].isDeleted()) return false;
+                table[i].setDeleted(true);
+                size--;
+                return true;
+            }
+            i = (i + 1) % table.length;
+        } while (i != index);
+        return false;
+    }
+
+    private int findEmpty(int index, K key) {
+        int i = index;
+        do {
             if (table[i] == null || table[i].isDeleted() || checkEquals(i, key)) return i;
             i = (i + 1) % table.length;
-        }while (i != index);
+        } while (i != index);
         return -1;
     }
 
