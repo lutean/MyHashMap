@@ -25,7 +25,7 @@ public class MyHashMap<K, V> {
 
     public V put(K key, V value) {
         int index = calcIndex(key);
-        if (checkEquals(index, key, table)) {
+        if (checkEquals(index, key, table) && !table[index].isDeleted()) {
             putEntry(key, value, index);
         } else {
             if (isOverLoad()) {
@@ -102,7 +102,7 @@ public class MyHashMap<K, V> {
 
     private void transfer(Entry[] newTable){
         for (Entry<K, V> entry : table) {
-            if (entry == null) continue;
+            if (entry == null || entry.isDeleted()) continue;
             int index = calcIndex(entry.getKey());
             if (checkEquals(index, entry.getKey(), newTable)) {
                 newTable[index] = entry;
