@@ -28,7 +28,10 @@ public class MyHashMap<K, V> {
         if (checkEquals(index, key, table)) {
             putEntry(key, value, index);
         } else {
-            if (isOverLoad()) resize(capacity * 2);
+            if (isOverLoad()) {
+                resize(capacity * 2);
+                index = calcIndex(key);
+            }
             index = findEmpty(index, key, table);
             if (index < 0) return null;
             putEntry(key, value, index);
